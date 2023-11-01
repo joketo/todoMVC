@@ -28,16 +28,28 @@ public class TaskService {
     public Task getTaskById(int id) throws TaskNotFoundException {
         Optional<Task> task = taskRepository.findById(id);
         if (task.isEmpty()) {
-            throw new TaskNotFoundException("Task could not be found with id {}", id);
+            throw new TaskNotFoundException("Task could not be found with id " + id);
         }
         return task.get();
     }
 
     public void saveOrUpdate(Task task) {
-        taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+        logger.info("Saved task with info: " + savedTask);
+    }
+
+    public void updateTaskCompleted(Task task) {
+        Optional<Task> oldState = taskRepository.findById(task.getId());
+        if (oldState.isPresent()) {
+            oldState.get().setCompleted(!oldState.get().isCompleted());
+            Task savedTask = taskRepository.save(oldState.get());
+            logger.info("Saved task with info: " + savedTask);
+
+        }
     }
 
     public void delete(int id) {
         taskRepository.deleteById(id);
+        logger.info("Deleted task with id " + id);
     }
 }

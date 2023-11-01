@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS TASK;
 CREATE TABLE TASK (
-        Task_code INT AUTO_INCREMENT PRIMARY KEY,
-        task_name VARCHAR(50)NOT NULL,
-        task_done BOOLEAN NOT NULL DEFAULT FALSE
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        description VARCHAR(50) NOT NULL,
+        completed BIT NOT NULL
 );

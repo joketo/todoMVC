@@ -14,10 +14,10 @@ public class Task {
     private int id;
 
     @Column
-    private String name;
+    private String description;
 
     @Column
-    private boolean done;
+    private boolean completed;
 
     public int getId() {
         return id;
@@ -27,19 +27,28 @@ public class Task {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String name) {
+        this.description = name;
     }
 
-    public boolean isDone() {
-        return done;
+    public boolean isCompleted() {
+        return completed;
     }
 
-    public void setDone(boolean done) {
-        this.done = done;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", done=" + completed +
+                '}';
     }
 }

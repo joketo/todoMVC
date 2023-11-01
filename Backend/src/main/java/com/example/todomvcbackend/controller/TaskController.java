@@ -38,4 +38,9 @@ public class TaskController {
         taskService.saveOrUpdate(task);
         return task.getId();
     }
+
+   @PostMapping("/task/complete")
+   private void updateComplete(@RequestBody Task task) {
+        taskService.updateTaskCompleted(task);
+   }
 }
