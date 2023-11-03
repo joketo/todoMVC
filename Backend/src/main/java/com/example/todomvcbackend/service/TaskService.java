@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.example.todomvcbackend.exceptions.TaskNotFoundException;
 import com.example.todomvcbackend.model.Task;
+import com.example.todomvcbackend.model.TaskInput;
 import com.example.todomvcbackend.repository.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +34,13 @@ public class TaskService {
         return task.get();
     }
 
-    public void saveOrUpdate(Task task) {
-        Task savedTask = taskRepository.save(task);
+    public Integer saveOrUpdate(TaskInput task) {
+        Task newTask = new Task();
+        newTask.setDescription(task.getDescription());
+        newTask.setCompleted(task.isCompleted());
+        Task savedTask = taskRepository.save(newTask);
         logger.info("Saved task with info: " + savedTask);
+        return savedTask.getId();
     }
 
     public void updateTaskCompleted(Task task) {

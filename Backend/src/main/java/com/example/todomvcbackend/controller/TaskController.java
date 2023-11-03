@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.example.todomvcbackend.exceptions.TaskNotFoundException;
 import com.example.todomvcbackend.model.Task;
+import com.example.todomvcbackend.model.TaskInput;
 import com.example.todomvcbackend.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,28 +21,27 @@ public class TaskController {
     TaskService taskService;
 
     @GetMapping("/task")
-    private List<Task> getAllTasks() {
+    public List<Task> getAllTasks() {
         return taskService.getAll();
     }
 
     @GetMapping("/task/{id}")
-    private Task getTask(@PathVariable("id") int id) throws TaskNotFoundException {
+    public Task getTask(@PathVariable("id") int id) throws TaskNotFoundException {
         return taskService.getTaskById(id);
     }
 
     @DeleteMapping("/task/{id}")
-    private void deleteTask(@PathVariable("id") int id) {
+    public void deleteTask(@PathVariable("id") int id) {
         taskService.delete(id);
     }
 
     @PostMapping("/task")
-    private int saveTask(@RequestBody Task task) {
-        taskService.saveOrUpdate(task);
-        return task.getId();
+    public int saveTask(@RequestBody TaskInput task) {
+        return taskService.saveOrUpdate(task);
     }
 
    @PostMapping("/task/complete")
-   private void updateComplete(@RequestBody Task task) {
+   public void updateComplete(@RequestBody Task task) {
         taskService.updateTaskCompleted(task);
    }
 }
