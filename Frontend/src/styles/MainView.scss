@@ -19,10 +19,20 @@
   }
 
   .TodoList {
-    color: $text-color;
+    color: $primary-color;
+    margin: 20vh auto;
+    h4 {
+      margin-top: 8px;
+    }
     .TaskDescription {
       padding: 5px;
     }
-
+    .Completed-task {
+      color: $text-color;
+      text-decoration: line-through;
+    }
+    .DeleteButtonPlaceholder {
+      width: 64px;
+    }
   }
 }

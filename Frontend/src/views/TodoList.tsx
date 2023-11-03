@@ -2,7 +2,7 @@ import '../styles/MainView.scss';
 import {useEffect, useState} from "react";
 import {TaskInput, Task} from "../models/Task";
 import axios from "axios";
-import {Button, CircularProgress, FormControl, List, ListItem, TextField} from "@mui/material";
+import {Button, Checkbox, CircularProgress, FormControl, List, ListItem, TextField} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 
 const TodoList = () => {
@@ -12,6 +12,7 @@ const TodoList = () => {
     const [taskItems, setTaskItems] = useState([]);
     const [newTaskDescription, setNewTaskDescription] = useState("");
     const [date, setDate] = useState(new Date());
+    const [showDeleteButton, setShowDeleteButton] = useState(0);
 
     const fetchTasks = (): void => {
         axios.get("http://localhost:8080/task")
@@ -33,6 +34,10 @@ const TodoList = () => {
         fetchTasks();
     }, [])
 
+    const handleTextFieldChange = (event: any) : void => {
+        setNewTaskDescription(event.target.value);
+    }
+
     const deleteTask = (taskId : number): void => {
         axios.delete("http://localhost:8080/task/" + taskId)
             .then(function (response) {
@@ -45,8 +50,17 @@ const TodoList = () => {
             })
     }
 
-    const handleTextFieldChange = (event: any) : void => {
-        setNewTaskDescription(event.target.value);
+    const toggleTaskCompleted = (task : Task): void => {
+        axios.post("http://localhost:8080/task/complete", task)
+            .then(function (response) {
+                setIsLoaded(true);
+                fetchTasks();
+                //Todo: lisää äsken luotu listaan hakemisen sijaan
+            })
+            .catch(function (error) {
+                setIsLoaded(true);
+                setError("error");
+            })
     }
 
     const submitTask = (): void => {
@@ -67,6 +81,13 @@ const TodoList = () => {
                 setError("error");
             })
     }
+    const handleMouseOver = (taskId: number): void => {
+        setShowDeleteButton(taskId);
+    }
+
+    const handleMouseOut = () => {
+        setShowDeleteButton(0);
+    }
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -84,9 +105,11 @@ const TodoList = () => {
                 </FormControl>
                 <List>
                     {taskItems.map((task: Task, i: number) => (
-                        <ListItem key={i}>
+                        <ListItem key={i} className={task.completed ? "Completed-task" : "task"} onMouseOver={() => handleMouseOver(task.id)} onMouseOut={handleMouseOut}>
+                            <Checkbox checked={task.completed} onClick={() => toggleTaskCompleted(task)}/>
                             <span className="TaskDescription">{task.description}</span>
-                            <Button variant="outlined" onClick={() => deleteTask(task.id)}><CloseIcon /></Button>
+                            {showDeleteButton !== task.id && <span className="DeleteButtonPlaceholder"></span>}
+                            {showDeleteButton === task.id && <Button variant="text" onClick={() => deleteTask(task.id)}><CloseIcon /></Button> }
                         </ListItem>
                     ))
                     }

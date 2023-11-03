@@ -1,4 +1,4 @@
-INSERT INTO TASK (id, description, completed) VALUES
-    (1, 'Feed the cats', false),
-    (2, 'Water the plants', false),
-    (3, 'Grind the coffee beans', false);
+INSERT INTO TASK (description, completed) VALUES
+    ('Feed the cats', false),
+    ('Water the plants', false),
+    ('Grind the coffee beans', false);

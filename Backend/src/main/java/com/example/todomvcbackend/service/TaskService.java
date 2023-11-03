@@ -43,13 +43,12 @@ public class TaskService {
         return savedTask.getId();
     }
 
-    public void updateTaskCompleted(Task task) {
-        Optional<Task> oldState = taskRepository.findById(task.getId());
+    public void updateTaskCompleted(int taskId) {
+        Optional<Task> oldState = taskRepository.findById(taskId);
         if (oldState.isPresent()) {
             oldState.get().setCompleted(!oldState.get().isCompleted());
             Task savedTask = taskRepository.save(oldState.get());
             logger.info("Saved task with info: " + savedTask);
-
         }
     }
 
