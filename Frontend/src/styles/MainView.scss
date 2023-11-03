@@ -1,0 +1,28 @@
+@import "colors";
+
+.MainView {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  height: 100vh;
+
+  .AppTitleContainer {
+    background-color: $primary-color;
+    color: $inverted-text-color;
+    height: 100vh;
+    width: 60vw;
+    h2 {
+      margin: 20vh auto auto 10vw;
+      text-align: start;
+    }
+  }
+
+  .TodoList {
+    color: $text-color;
+    .TaskDescription {
+      padding: 5px;
+    }
+
+  }
+}
