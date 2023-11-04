@@ -14,7 +14,7 @@ public class Task {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column
     private String description;
@@ -22,7 +22,7 @@ public class Task {
     @Column
     private boolean completed;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

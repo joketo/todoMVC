@@ -25,7 +25,7 @@ public class TaskController {
     }
 
     @GetMapping("/task/{id}")
-    public Task getTask(@PathVariable("id") int id) throws TaskNotFoundException {
+    public Task getTask(@PathVariable("id") long id) throws TaskNotFoundException {
         return taskService.getTaskById(id);
     }
 
@@ -35,8 +35,8 @@ public class TaskController {
     }
 
     @PostMapping("/task")
-    public int saveTask(@RequestBody TaskInput task) {
-        return taskService.saveOrUpdate(task);
+    public Long saveTask(@RequestBody TaskInput task) {
+        return taskService.save(task);
     }
 
    @PostMapping("/task/complete")

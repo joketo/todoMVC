@@ -26,7 +26,7 @@ public class TaskService {
         return tasks;
     }
 
-    public Task getTaskById(int id) throws TaskNotFoundException {
+    public Task getTaskById(long id) throws TaskNotFoundException {
         Optional<Task> task = taskRepository.findById(id);
         if (task.isEmpty()) {
             throw new TaskNotFoundException("Task could not be found with id " + id);
@@ -34,25 +34,25 @@ public class TaskService {
         return task.get();
     }
 
-    public Integer saveOrUpdate(TaskInput task) {
+    public long save(TaskInput task) {
         Task newTask = new Task();
         newTask.setDescription(task.getDescription());
         newTask.setCompleted(task.isCompleted());
         Task savedTask = taskRepository.save(newTask);
-        logger.info("Saved task with info: " + savedTask);
+        logger.info("Saved new task with info: " + savedTask);
         return savedTask.getId();
     }
 
-    public void updateTaskCompleted(int taskId) {
+    public void updateTaskCompleted(long taskId) {
         Optional<Task> oldState = taskRepository.findById(taskId);
         if (oldState.isPresent()) {
             oldState.get().setCompleted(!oldState.get().isCompleted());
             Task savedTask = taskRepository.save(oldState.get());
-            logger.info("Saved task with info: " + savedTask);
+            logger.info("Updated task with info: " + savedTask);
         }
     }
 
-    public void delete(int id) {
+    public void delete(long id) {
         taskRepository.deleteById(id);
         logger.info("Deleted task with id " + id);
     }

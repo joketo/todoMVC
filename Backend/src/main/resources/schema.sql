@@ -1,6 +1,12 @@
 DROP TABLE IF EXISTS TASK;
 CREATE TABLE TASK (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id IDENTITY NOT NULL PRIMARY KEY,
         description VARCHAR(50) NOT NULL,
         completed BIT NOT NULL
 );
+
+-- Data for demo
+INSERT INTO TASK (description, completed) VALUES
+        ('Feed the cats', false),
+        ('Water the plants', false),
+        ('Grind the coffee beans', false);
