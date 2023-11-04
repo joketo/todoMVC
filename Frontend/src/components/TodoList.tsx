@@ -41,13 +41,13 @@ const TodoList = (props: Props) => {
         setNewTaskDescription("");
         //todo vasta kun saatu vastaus createTaskilta?
     }
-
+    //todo: laita enter triggeröimään submit eli form kuntoon
     const handleMouseOver = (rowId: number): void => {
         setShowDeleteButtonOnRow(rowId);
     }
 
     const handleMouseOut = () => {
-        setShowDeleteButtonOnRow(0);
+        setShowDeleteButtonOnRow(-1);
     }
 
     return (
@@ -57,8 +57,8 @@ const TodoList = (props: Props) => {
             </h2>
             <FormControl className="NewTaskForm">
                 <TextField id="new-task-description" name="description" label="What needs to be done" variant="standard"
-                           value={newTaskDescription} onChange={handleTextFieldChange}/>
-                <Button onClick={submitTask}>Add new</Button>
+                           value={newTaskDescription} onChange={handleTextFieldChange} className="TaskDescriptionInput"/>
+                <Button type="submit" onClick={submitTask}>Add new</Button>
             </FormControl>
             <List>
                 {props.taskItems.map((task: Task, i: number) => (
