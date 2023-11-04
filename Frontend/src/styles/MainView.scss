@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  font-size: calc(10px + 2vmin);
   height: 100vh;
 
   .AppTitleContainer {
@@ -12,43 +11,20 @@
     color: $inverted-text-color;
     height: 100vh;
     width: 30vw;
-    h2 {
-      margin: 20vh auto auto 10vw;
-      text-align: start;
-    }
-  }
-
-  .TodoList {
-    color: $primary-color;
-    margin: 20vh auto auto 5vw;
-    text-align: start;
-    width: 40pc;
-
-    .TodoTitle {
-      margin-top: 8px;
-      padding-left: 25px;
-    }
-    .TaskDescription {
-      padding: 5px;
-    }
-    .NewTaskForm {
-      width: 100%;
-      padding-left: 25px;
+    .logoAndTitle {
+      margin: 10vh auto auto 7vw;
+      color: white;
       display: flex;
-      flex-direction: row;
-    }
-
-    .TaskRow {
-      width: 100%;
-      &__Completed {
-        color: $text-color;
-        text-decoration: line-through;
+      position: relative;
+      align-items: center;
+      .App-logo {
+        height: 11vmin;
+      }
+      h1 {
+        font-size: 6vmin;
+        text-align: start;
+        margin: 0 0 -62px -20px
       }
     }
-
-    .DeleteButton {
-      margin: auto 0 auto auto;
-    }
-
   }
 }

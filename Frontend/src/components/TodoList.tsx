@@ -1,4 +1,4 @@
-import '../styles/MainView.scss';
+import '../styles/TodoList.scss';
 import {useEffect, useState} from "react";
 import {TaskInput, Task} from "../models/Task";
 import {Button, Checkbox, FormControl, List, ListItem, TextField} from "@mui/material";
@@ -16,7 +16,7 @@ const TodoList = (props: Props) => {
 
     const [newTaskDescription, setNewTaskDescription] = useState("");
     const [date, setDate] = useState(new Date());
-    const [showDeleteButton, setShowDeleteButton] = useState(0);
+    const [showDeleteButtonOnRow, setShowDeleteButtonOnRow] = useState(-1);
 
     // this useEffect will run once
     useEffect(() => {
@@ -42,19 +42,19 @@ const TodoList = (props: Props) => {
         //todo vasta kun saatu vastaus createTaskilta?
     }
 
-    const handleMouseOver = (taskId: number): void => {
-        setShowDeleteButton(taskId);
+    const handleMouseOver = (rowId: number): void => {
+        setShowDeleteButtonOnRow(rowId);
     }
 
     const handleMouseOut = () => {
-        setShowDeleteButton(0);
+        setShowDeleteButtonOnRow(0);
     }
-    
+
     return (
         <div className="TodoList">
-            <h3 className="TodoTitle">
+            <h2 className="TodoTitle">
                 {getWeekDayWithUpperCaseAndCurrentDate()}
-            </h3>
+            </h2>
             <FormControl className="NewTaskForm">
                 <TextField id="new-task-description" name="description" label="What needs to be done" variant="standard"
                            value={newTaskDescription} onChange={handleTextFieldChange}/>
@@ -62,10 +62,14 @@ const TodoList = (props: Props) => {
             </FormControl>
             <List>
                 {props.taskItems.map((task: Task, i: number) => (
-                    <ListItem key={i} className={task.completed ? "TaskRow__Completed" : "TaskRow"} onMouseOver={() => handleMouseOver(task.id)} onMouseOut={handleMouseOut}>
-                        <Checkbox checked={task.completed} onClick={() => props.toggleTaskCompleted(task)}/>
+                    <ListItem key={i} className={task.completed ? "TaskRow__Completed" : "TaskRow"}
+                              onMouseOver={() => handleMouseOver(i)} onMouseOut={handleMouseOut}
+                              onClick={() => props.toggleTaskCompleted(task)}>
+                        <Checkbox checked={task.completed}/>
                         <span className="TaskDescription">{task.description}</span>
-                        {showDeleteButton === task.id && <Button className="DeleteButton" variant="text" onClick={() => props.deleteTask(task.id)}><CloseIcon /></Button> }
+                        {showDeleteButtonOnRow === i &&
+                          <Button className="DeleteButton" variant="text" onClick={() => props.deleteTask(task.id)}><CloseIcon /></Button>
+                        }
                     </ListItem>
                 ))
                 }
