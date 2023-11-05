@@ -12,12 +12,18 @@
     color: $lighter-blue;
   }
 
-  .TaskDescription {
-    padding: 5px;
-  }
-
   .TaskDescriptionInput {
     width: 31pc;
+  }
+
+  .FiltersContainer {
+    padding: 15px 25px;
+    .FilterButtonSelected {
+      border: $lighter-blue 2px solid;
+    }
+    .FilterButtonUnSelected {
+      border: none;
+    }
   }
 
   .NewTaskForm {
@@ -27,9 +33,14 @@
     flex-direction: row;
   }
 
+  .TaskDescription {
+    padding: 5px;
+  }
+
   .TaskRow {
     width: 100%;
     padding-bottom: 0;
+    padding-top: 0;
 
     &__Completed {
       color: $text-color;

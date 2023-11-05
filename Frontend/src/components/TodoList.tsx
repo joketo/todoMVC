@@ -2,7 +2,8 @@ import '../styles/TodoList.scss';
 import {useEffect, useState} from "react";
 import {TaskInput, Task} from "../models/Task";
 import {Button, Checkbox, FormControl, List, ListItem, TextField} from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import {Close as CloseIcon, PanoramaFishEye as PanoramaFishEyeIcon, CheckCircleOutline as CheckCircleOutlineIcon} from "@mui/icons-material";
+import FilterButton from "./FilterButton";
 
 interface Props {
     error?: string,
@@ -17,6 +18,15 @@ const TodoList = (props: Props) => {
     const [newTaskDescription, setNewTaskDescription] = useState("");
     const [date, setDate] = useState(new Date());
     const [showDeleteButtonOnRow, setShowDeleteButtonOnRow] = useState(-1);
+    const [filter, setFilter] = useState("All");
+
+    const FILTER_MAP : {[key: string]: any}  = {
+        "All": () => true,
+        "Active": (task:Task) => !task.completed,
+        "Completed": (task:Task) => task.completed,
+    };
+
+    const FILTER_NAMES : string[] = Object.keys(FILTER_MAP);
 
     // this useEffect will run once
     useEffect(() => {
@@ -33,6 +43,7 @@ const TodoList = (props: Props) => {
     }
 
     const submitTask = (): void => {
+        //todo: laita enter triggeröimään submit eli laita form kuntoon
         let newTask : TaskInput = {
             description: newTaskDescription,
             completed: false
@@ -41,12 +52,12 @@ const TodoList = (props: Props) => {
         setNewTaskDescription("");
         //todo vasta kun saatu vastaus createTaskilta?
     }
-    //todo: laita enter triggeröimään submit eli form kuntoon
-    const handleMouseOver = (rowId: number): void => {
+
+    const handleMouseOverRow = (rowId: number): void => {
         setShowDeleteButtonOnRow(rowId);
     }
 
-    const handleMouseOut = () => {
+    const handleMouseOutRow = () => {
         setShowDeleteButtonOnRow(-1);
     }
 
@@ -60,12 +71,23 @@ const TodoList = (props: Props) => {
                            value={newTaskDescription} onChange={handleTextFieldChange} className="TaskDescriptionInput"/>
                 <Button type="submit" onClick={submitTask}>Add new</Button>
             </FormControl>
+            <div className="FiltersContainer">
+                <span>Show </span>
+                {FILTER_NAMES.map((name) => (
+                    <FilterButton
+                        key={name}
+                        name={name}
+                        isPressed={name === filter}
+                        setFilter={setFilter}
+                    />
+                ))}
+            </div>
             <List>
-                {props.taskItems.map((task: Task, i: number) => (
-                    <ListItem key={i} className={task.completed ? "TaskRow__Completed" : "TaskRow"}
-                              onMouseOver={() => handleMouseOver(i)} onMouseOut={handleMouseOut}
+                {props.taskItems.filter(FILTER_MAP[filter]).map((task: Task, i: number) => (
+                    <ListItem key={i} className={task.completed ? "TaskRow TaskRow__Completed" : "TaskRow"}
+                              onMouseOver={() => handleMouseOverRow(i)} onMouseOut={handleMouseOutRow}
                               onClick={() => props.toggleTaskCompleted(task)}>
-                        <Checkbox checked={task.completed}/>
+                        <Checkbox checked={task.completed} icon={<PanoramaFishEyeIcon />} checkedIcon={<CheckCircleOutlineIcon />} />
                         <span className="TaskDescription">{task.description}</span>
                         {showDeleteButtonOnRow === i &&
                           <Button className="DeleteButton" variant="text" onClick={() => props.deleteTask(task.id)}><CloseIcon /></Button>
