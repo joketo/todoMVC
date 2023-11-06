@@ -11,8 +11,13 @@ import com.example.todomvcbackend.repository.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Service that handles communication with the TaskRepository
+ */
 @Service
 public class TaskService {
     @Autowired
@@ -26,10 +31,12 @@ public class TaskService {
         return tasks;
     }
 
-    public Task getTaskById(long id) throws TaskNotFoundException {
+    public Task getTaskById(long id) throws ResponseStatusException {
         Optional<Task> task = taskRepository.findById(id);
         if (task.isEmpty()) {
-            throw new TaskNotFoundException("Task could not be found with id " + id);
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "entity not found"
+            );
         }
         return task.get();
     }

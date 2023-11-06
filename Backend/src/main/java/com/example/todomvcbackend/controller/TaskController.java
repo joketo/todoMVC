@@ -2,7 +2,6 @@ package com.example.todomvcbackend.controller;
 
 import java.util.List;
 
-import com.example.todomvcbackend.exceptions.TaskNotFoundException;
 import com.example.todomvcbackend.model.Task;
 import com.example.todomvcbackend.model.TaskInput;
 import com.example.todomvcbackend.service.TaskService;
@@ -13,7 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Controller for API request for fetching, adding and editing tasks
+ */
 @RestController
 public class TaskController {
     @Autowired
@@ -25,7 +28,7 @@ public class TaskController {
     }
 
     @GetMapping("/task/{id}")
-    public Task getTask(@PathVariable("id") long id) throws TaskNotFoundException {
+    public Task getTask(@PathVariable("id") long id) throws ResponseStatusException {
         return taskService.getTaskById(id);
     }
 

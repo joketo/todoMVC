@@ -1,5 +1,8 @@
 package com.example.todomvcbackend.model;
 
+/**
+ * Class for creating a new Task
+ */
 public class TaskInput {
 
     private String description;

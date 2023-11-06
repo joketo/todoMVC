@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Class for wrapping Task for database storage, so that we can generate proper indexes for id's and such.
+ */
 @Entity
 @Table
 public class Task {
