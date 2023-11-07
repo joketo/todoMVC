@@ -67,9 +67,7 @@ const MainView = () => {
             })
     }
 
-    if (error) {
-        return <div>Error: {error}</div>;
-    } else if (!isLoaded) {
+    if (!isLoaded) {
         return <CircularProgress color="inherit" />
     } else {
         return (

@@ -1,5 +1,5 @@
 import '../styles/TodoList.scss';
-import {useEffect, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {TaskInput, Task} from "../models/Task";
 import {Button, Checkbox, FormControl, List, ListItem, TextField} from "@mui/material";
 import {Close as CloseIcon, PanoramaFishEye as PanoramaFishEyeIcon, CheckCircleOutline as CheckCircleOutlineIcon} from "@mui/icons-material";
@@ -42,15 +42,15 @@ const TodoList = (props: Props) => {
         return weekday.charAt(0).toUpperCase() + weekday.slice(1) + ' ' + date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
     }
 
-    const submitTask = (): void => {
-        //todo: laita enter triggeröimään submit eli laita form kuntoon
+    const submitTask = (event: FormEvent<HTMLFormElement>): void => {
+        event.preventDefault();
         let newTask : TaskInput = {
             description: newTaskDescription,
             completed: false
         }
         props.createTask(newTask);
         setNewTaskDescription("");
-        //todo vasta kun saatu vastaus createTaskilta?
+        //todo tyhjennä description-kenttä vasta kun saatu vastaus createTaskilta?
     }
 
     const handleMouseOverRow = (rowId: number): void => {
@@ -66,11 +66,15 @@ const TodoList = (props: Props) => {
             <h2 className="TodoTitle">
                 {getWeekDayWithUpperCaseAndCurrentDate()}
             </h2>
-            <FormControl className="NewTaskForm">
-                <TextField id="new-task-description" name="description" label="What needs to be done" variant="standard"
-                           value={newTaskDescription} onChange={handleTextFieldChange} className="TaskDescriptionInput"/>
-                <Button type="submit" onClick={submitTask}>Add new</Button>
-            </FormControl>
+
+            <form onSubmit={submitTask}>
+                <FormControl className="NewTaskForm">
+                        <TextField id="new-task-description" name="description" label="What needs to be done" variant="standard"
+                                   value={newTaskDescription} onChange={handleTextFieldChange} className="TaskDescriptionInput"/>
+                        <Button type="submit">Add new</Button>
+                </FormControl>
+            </form>
+
             <div className="FiltersContainer">
                 <span>Show </span>
                 {FILTER_NAMES.map((name) => (
