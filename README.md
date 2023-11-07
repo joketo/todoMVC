@@ -6,7 +6,7 @@ Small demo project
 - React, Typescript
 
 ## Features:
-With this groudbreaking app the user can
+With this groundbreaking app the user can
 - Create and remove tasks
 - Mark tasks as completed or mark them active again
 - Filter the visible tasks based on the completed/active-status
