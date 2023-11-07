@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.todomvcbackend.exceptions.TaskNotFoundException;
 import com.example.todomvcbackend.model.Task;
 import com.example.todomvcbackend.model.TaskInput;
 import com.example.todomvcbackend.repository.TaskRepository;

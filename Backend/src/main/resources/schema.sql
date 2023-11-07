@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS TASK;
 CREATE TABLE TASK (
         id IDENTITY NOT NULL PRIMARY KEY,
-        description VARCHAR(50) NOT NULL,
+        description VARCHAR(500) NOT NULL,
         completed BIT NOT NULL
 );
 
