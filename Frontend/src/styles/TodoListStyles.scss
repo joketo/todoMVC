@@ -1,0 +1,55 @@
+@import "colors";
+
+.TodoList {
+  color: $primary-color;
+  margin: 18vh auto auto 5vw;
+  text-align: start;
+  width: 40pc;
+
+  .TodoTitle {
+    margin-top: 8px;
+    padding-left: 25px;
+    color: $lighter-blue;
+  }
+
+  .TaskDescriptionInput {
+    width: 31pc;
+  }
+
+  .FiltersContainer {
+    padding: 15px 25px;
+    .FilterButtonSelected {
+      border: $lighter-blue 2px solid;
+    }
+    .FilterButtonUnSelected {
+      border: none;
+    }
+  }
+
+  .NewTaskForm {
+    width: 100%;
+    padding-left: 25px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .TaskDescription {
+    padding: 5px;
+  }
+
+  .TaskRow {
+    width: 100%;
+    padding-bottom: 0;
+    padding-top: 0;
+
+    &__Completed {
+      color: $text-color;
+      text-decoration: line-through;
+    }
+  }
+
+  .DeleteButton {
+    margin: auto 0 auto auto;
+  }
+
+}
