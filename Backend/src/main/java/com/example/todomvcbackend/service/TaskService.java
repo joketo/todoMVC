@@ -40,22 +40,26 @@ public class TaskService {
         return task.get();
     }
 
-    public long save(TaskInput task) {
+    public Task save(TaskInput task) {
         Task newTask = new Task();
         newTask.setDescription(task.getDescription());
         newTask.setCompleted(task.isCompleted());
         Task savedTask = taskRepository.save(newTask);
         logger.info("Saved new task with info: " + savedTask);
-        return savedTask.getId();
+        return savedTask;
     }
 
-    public void updateTaskCompleted(long taskId) {
+    public Task updateTaskCompleted(long taskId) {
         Optional<Task> oldState = taskRepository.findById(taskId);
-        if (oldState.isPresent()) {
-            oldState.get().setCompleted(!oldState.get().isCompleted());
-            Task savedTask = taskRepository.save(oldState.get());
-            logger.info("Updated task with info: " + savedTask);
+        if (oldState.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "entity not found"
+            );
         }
+        oldState.get().setCompleted(!oldState.get().isCompleted());
+        Task savedTask = taskRepository.save(oldState.get());
+        logger.info("Updated task with info: " + savedTask);
+        return savedTask;
     }
 
     public void delete(long id) {

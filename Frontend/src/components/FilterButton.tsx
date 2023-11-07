@@ -1,5 +1,6 @@
-import '../styles/TodoList.scss';
-import {Button} from "@mui/material";
+import '../styles/FilterButtonStyles.scss';
+import { Button } from "@mui/material";
+
 interface Props {
     isPressed: boolean,
     setFilter: (name: string) => void,
@@ -9,13 +10,13 @@ interface Props {
 
 const FilterButton = (props: Props) => {
     return (
-            <Button
-                type="button"
-                className={props.isPressed ? "FilterButtonSelected" : "FilterButtonUnSelected"}
-                aria-pressed={props.isPressed}
-                onClick={() => props.setFilter(props.name)}>
+        <Button
+            type="button"
+            className={props.isPressed ? "FilterButtonSelected" : "FilterButtonNotSelected"}
+            aria-pressed={props.isPressed}
+            onClick={() => props.setFilter(props.name)}>
                 <span>{props.name}</span>
-            </Button>
+        </Button>
     );
 };
 

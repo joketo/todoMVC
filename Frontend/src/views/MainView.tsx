@@ -1,4 +1,4 @@
-import '../styles/MainView.scss';
+import '../styles/MainViewStyles.scss';
 import TodoList from "../components/TodoList";
 import TitleComponent from "../components/TitleComponent";
 import {useEffect, useState} from "react";
@@ -9,7 +9,7 @@ import {CircularProgress} from "@mui/material";
 const MainView = () => {
     const [error, setError] = useState("");
     const [isLoaded, setIsLoaded] = useState(false);
-    const [taskItems, setTaskItems] = useState([]);
+    const [taskItems, setTaskItems] = useState<Task[]>([]);
 
     const fetchTasks = (): void => {
         axios.get("http://localhost:8080/task")
@@ -41,12 +41,20 @@ const MainView = () => {
             })
     }
 
+    const updateTaskInTaskItems = (updated: Task): void => {
+        const updatedTasks = taskItems.map((task: Task) => {
+            if (task.id === updated.id) {
+                return updated;
+            }
+            return task;
+        });
+        setTaskItems(updatedTasks);
+    }
+
     const toggleTaskCompleted = (task : Task): void => {
         axios.post("http://localhost:8080/task/complete", task)
             .then(function (response) {
-                setIsLoaded(true);
-                fetchTasks();
-                //Todo: lisää äsken luotu listaan hakemisen sijaan
+                updateTaskInTaskItems(response.data);
             })
             .catch(function (error) {
                 setIsLoaded(true);
@@ -57,12 +65,10 @@ const MainView = () => {
     const createTask = (newTask: TaskInput): void => {
         axios.post("http://localhost:8080/task", newTask)
             .then(function (response) {
-                setIsLoaded(true);
-                fetchTasks();
-                //Todo: lisää äsken luotu listaan hakemisen sijaan
+                const updatedTasks = taskItems.concat(response.data);
+                setTaskItems(updatedTasks);
             })
             .catch(function (error) {
-                setIsLoaded(true);
                 setError("error");
             })
     }

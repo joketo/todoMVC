@@ -38,12 +38,12 @@ public class TaskController {
     }
 
     @PostMapping("/task")
-    public Long saveTask(@RequestBody TaskInput task) {
+    public Task saveTask(@RequestBody TaskInput task) {
         return taskService.save(task);
     }
 
    @PostMapping("/task/complete")
-   public void updateComplete(@RequestBody Task task) {
-        taskService.updateTaskCompleted(task.getId());
+   public Task updateCompletedValue(@RequestBody Task task) throws ResponseStatusException {
+        return taskService.updateTaskCompleted(task.getId());
    }
 }

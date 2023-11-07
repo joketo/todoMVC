@@ -1,5 +1,5 @@
-import '../styles/TodoList.scss';
-import {FormEvent, useEffect, useState} from "react";
+import '../styles/TodoListStyles.scss';
+import {FormEvent, useState} from "react";
 import {TaskInput, Task} from "../models/Task";
 import {Button, Checkbox, FormControl, List, ListItem, TextField} from "@mui/material";
 import {Close as CloseIcon, PanoramaFishEye as PanoramaFishEyeIcon, CheckCircleOutline as CheckCircleOutlineIcon} from "@mui/icons-material";
@@ -16,7 +16,7 @@ interface Props {
 const TodoList = (props: Props) => {
 
     const [newTaskDescription, setNewTaskDescription] = useState("");
-    const [date, setDate] = useState(new Date());
+    const date = new Date();
     const [showDeleteButtonOnRow, setShowDeleteButtonOnRow] = useState(-1);
     const [filter, setFilter] = useState("All");
 
@@ -27,11 +27,6 @@ const TodoList = (props: Props) => {
     };
 
     const FILTER_NAMES : string[] = Object.keys(FILTER_MAP);
-
-    // this useEffect will run once
-    useEffect(() => {
-        setDate(new Date());
-    }, [])
 
     const handleTextFieldChange = (event: any) : void => {
         setNewTaskDescription(event.target.value);

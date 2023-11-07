@@ -1,30 +1,26 @@
 @import "colors";
 
-.MainView {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+.AppTitleContainer {
+  background-color: $primary-color;
+  color: $inverted-text-color;
   height: 100vh;
+  width: 30vw;
 
-  .AppTitleContainer {
-    background-color: $primary-color;
-    color: $inverted-text-color;
-    height: 100vh;
-    width: 30vw;
-    .LogoAndTitle {
-      margin: 10vh auto auto 7vw;
-      color: white;
-      display: flex;
-      position: relative;
-      align-items: center;
-      .App-logo {
-        height: 11vmin;
-      }
-      h1 {
-        font-size: 6vmin;
-        text-align: start;
-        margin: 0 0 -62px -20px
-      }
+  .LogoAndTitle {
+    margin: 10vh auto auto 7vw;
+    color: white;
+    display: flex;
+    position: relative;
+    align-items: center;
+
+    .App-logo {
+      height: 11vmin;
+    }
+
+    h1 {
+      font-size: 6vmin;
+      text-align: start;
+      margin: 0 0 -62px -20px
     }
   }
 }
