@@ -1,101 +1,122 @@
 import '../styles/TodoListStyles.scss';
-import {FormEvent, useState} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import {TaskInput, Task} from "../models/Task";
-import {Button, Checkbox, FormControl, List, ListItem, TextField} from "@mui/material";
-import {Close as CloseIcon, PanoramaFishEye as PanoramaFishEyeIcon, CheckCircleOutline as CheckCircleOutlineIcon} from "@mui/icons-material";
-import FilterButton from "./FilterButton";
+import {Button, CircularProgress, FormControl, TextField} from "@mui/material";
+import axios from "axios";
+import TaskListComponent from "./TaskListComponent";
 
-interface Props {
-    error?: string,
-    taskItems: Task[],
-    deleteTask: (id: number) => void,
-    createTask: (newTask: TaskInput) => void,
-    toggleTaskCompleted: (task: Task) => void,
-}
+const TodoList = () => {
 
-const TodoList = (props: Props) => {
-
-    const [newTaskDescription, setNewTaskDescription] = useState("");
     const date = new Date();
-    const [showDeleteButtonOnRow, setShowDeleteButtonOnRow] = useState(-1);
-    const [filter, setFilter] = useState("All");
+    const [newTaskDescription, setNewTaskDescription] = useState("");
+    const [error, setError] = useState("");
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [taskItems, setTaskItems] = useState<Task[]>([]);
 
-    const FILTER_MAP : {[key: string]: any}  = {
-        "All": () => true,
-        "Active": (task:Task) => !task.completed,
-        "Completed": (task:Task) => task.completed,
-    };
+    const fetchTasks = (): void => {
+        axios.get("http://localhost:8080/task")
+            .then(function (response) {
+                setIsLoaded(true);
+                setTaskItems(response.data);
+            })
+            .catch(function (error) {
+                setIsLoaded(true);
+                setError("Error, failed to get the list of tasks");
+            })
+    }
 
-    const FILTER_NAMES : string[] = Object.keys(FILTER_MAP);
+    // Note: the empty deps array [] means
+    // this useEffect will run once
+    useEffect(() => {
+        fetchTasks();
+    }, [])
 
-    const handleTextFieldChange = (event: any) : void => {
+    const deleteTask = (taskId: number): void => {
+        axios.delete("http://localhost:8080/task/" + taskId)
+            .then(function (response) {
+                setIsLoaded(true);
+                fetchTasks();
+            })
+            .catch(function (error) {
+                setIsLoaded(true);
+                setError("Error, deleting task failed");
+            })
+    }
+
+    const updateTaskInTaskItems = (updated: Task): void => {
+        const updatedTasks = taskItems.map((task: Task) => {
+            if (task.id === updated.id) {
+                return updated;
+            }
+            return task;
+        });
+        setTaskItems(updatedTasks);
+    }
+
+    const toggleTaskCompleted = (task: Task): void => {
+        axios.post("http://localhost:8080/task/complete", task)
+            .then(function (response) {
+                updateTaskInTaskItems(response.data);
+            })
+            .catch(function (error) {
+                setIsLoaded(true);
+                setError("Error, changing status of a task failed");
+            })
+    }
+
+    const handleTextFieldChange = (event: any): void => {
         setNewTaskDescription(event.target.value);
     }
 
-    const getWeekDayWithUpperCaseAndCurrentDate = () : string => {
+    const getWeekDayWithUpperCaseAndCurrentDate = (): string => {
         let weekday = date.toLocaleDateString('fi-FI', {weekday: 'long'});
         return weekday.charAt(0).toUpperCase() + weekday.slice(1) + ' ' + date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
     }
 
     const submitTask = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
-        let newTask : TaskInput = {
+        let newTask: TaskInput = {
             description: newTaskDescription,
             completed: false
         }
-        props.createTask(newTask);
-        setNewTaskDescription("");
-        //todo tyhjennä description-kenttä vasta kun saatu vastaus createTaskilta?
+        axios.post("http://localhost:8080/task", newTask)
+            .then(function (response) {
+                const updatedTasks = taskItems.concat(response.data);
+                setTaskItems(updatedTasks);
+                setNewTaskDescription("");
+            })
+            .catch(function (error) {
+                setError("Error, creating new task failed");
+            })
     }
 
-    const handleMouseOverRow = (rowId: number): void => {
-        setShowDeleteButtonOnRow(rowId);
-    }
 
-    const handleMouseOutRow = () => {
-        setShowDeleteButtonOnRow(-1);
-    }
+    if (error) {
+        return <div>Error: {error}</div>;
+    } else if (!isLoaded) {
+        return <CircularProgress color="inherit"/>
+    } else {
+        return (
+            <div className="TodoList">
+                <h2 className="TodoTitle">
+                    {getWeekDayWithUpperCaseAndCurrentDate()}
+                </h2>
 
-    return (
-        <div className="TodoList">
-            <h2 className="TodoTitle">
-                {getWeekDayWithUpperCaseAndCurrentDate()}
-            </h2>
-
-            <form onSubmit={submitTask}>
-                <FormControl className="NewTaskForm">
-                        <TextField id="new-task-description" name="description" label="What needs to be done" variant="standard"
-                                   value={newTaskDescription} onChange={handleTextFieldChange} className="TaskDescriptionInput"/>
+                <form onSubmit={submitTask}>
+                    <FormControl className="NewTaskForm">
+                        <TextField id="new-task-description" name="description" label="What needs to be done"
+                                   variant="standard"
+                                   value={newTaskDescription} onChange={handleTextFieldChange}
+                                   className="TaskDescriptionInput"/>
                         <Button type="submit">Add new</Button>
-                </FormControl>
-            </form>
+                    </FormControl>
+                </form>
 
-            <div className="FiltersContainer">
-                <span>Show </span>
-                {FILTER_NAMES.map((name) => (
-                    <FilterButton
-                        key={name}
-                        name={name}
-                        isPressed={name === filter}
-                        setFilter={setFilter}
-                    />
-                ))}
+                <TaskListComponent taskItems={taskItems}
+                                   deleteTask={deleteTask}
+                                   toggleTaskCompleted={toggleTaskCompleted}/>
             </div>
-            <List>
-                {props.taskItems.filter(FILTER_MAP[filter]).map((task: Task, i: number) => (
-                    <ListItem key={i} className={task.completed ? "TaskRow TaskRow__Completed" : "TaskRow"}
-                              onMouseOver={() => handleMouseOverRow(i)} onMouseOut={handleMouseOutRow}
-                              onClick={() => props.toggleTaskCompleted(task)}>
-                        <Checkbox checked={task.completed} icon={<PanoramaFishEyeIcon />} checkedIcon={<CheckCircleOutlineIcon />} />
-                        <span className="TaskDescription">{task.description}</span>
-                        {showDeleteButtonOnRow === i &&
-                          <Button className="DeleteButton" variant="text" onClick={() => props.deleteTask(task.id)}><CloseIcon /></Button>
-                        }
-                    </ListItem>
-                ))
-                }
-            </List>
-        </div>
-    );
+        );
+    }
 }
 export default TodoList;
