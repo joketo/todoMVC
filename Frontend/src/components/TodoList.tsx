@@ -4,6 +4,7 @@ import {TaskInput, Task} from "../models/Task";
 import {Button, CircularProgress, FormControl, TextField} from "@mui/material";
 import axios from "axios";
 import TaskListComponent from "./TaskListComponent";
+import backend_baseurl from "../config";
 
 const TodoList = () => {
 
@@ -14,7 +15,7 @@ const TodoList = () => {
     const [taskItems, setTaskItems] = useState<Task[]>([]);
 
     const fetchTasks = (): void => {
-        axios.get("http://localhost:8080/task")
+        axios.get(backend_baseurl)
             .then(function (response) {
                 setIsLoaded(true);
                 setTaskItems(response.data);
@@ -32,7 +33,7 @@ const TodoList = () => {
     }, [])
 
     const deleteTask = (taskId: number): void => {
-        axios.delete("http://localhost:8080/task/" + taskId)
+        axios.delete(backend_baseurl + taskId)
             .then(function (response) {
                 setIsLoaded(true);
                 fetchTasks();
@@ -54,7 +55,7 @@ const TodoList = () => {
     }
 
     const toggleTaskCompleted = (task: Task): void => {
-        axios.post("http://localhost:8080/task/complete", task)
+        axios.post(backend_baseurl + "/complete", task)
             .then(function (response) {
                 updateTaskInTaskItems(response.data);
             })
@@ -79,7 +80,7 @@ const TodoList = () => {
             description: newTaskDescription,
             completed: false
         }
-        axios.post("http://localhost:8080/task", newTask)
+        axios.post(backend_baseurl, newTask)
             .then(function (response) {
                 const updatedTasks = taskItems.concat(response.data);
                 setTaskItems(updatedTasks);
